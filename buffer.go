@@ -11,7 +11,7 @@ type WriterSeeker struct {
 	buf *bytes.Buffer
 }
 
-func NewWriteSeeker(size int) *WriterSeeker {
+func NewWriteSeeker() *WriterSeeker {
 	return &WriterSeeker{
 		pos: 0,
 		buf: bytes.NewBuffer(make([]byte, 0)),

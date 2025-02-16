@@ -20,11 +20,11 @@ type Stream struct {
 	stop     chan struct{}
 	buffer   []*Segment
 	sequence uint64
-	size     int
 
-	Key       string
-	UrlString string
-	Url       *url.URL
+	Key      string
+	Url      *url.URL
+	Duration time.Duration
+	Interval time.Duration
 }
 
 type Segment struct {
@@ -32,13 +32,7 @@ type Segment struct {
 	timestamp time.Time
 }
 
-const (
-	ReplayDirectory = "replays"
-	BufferDuration  = 20 * time.Second
-	Interval        = 2 * time.Second
-)
-
-func NewStream(cluster, key, uri string) (*Stream, error) {
+func NewStream(cfg *Config, key, uri string) (*Stream, error) {
 	u, err := url.Parse(uri)
 	if err != nil {
 		return nil, err
@@ -50,9 +44,9 @@ func NewStream(cluster, key, uri string) (*Stream, error) {
 		},
 		stop: make(chan struct{}),
 
-		Key:       key,
-		UrlString: uri,
-		Url:       u,
+		Key:      key,
+		Url:      u,
+		Duration: time.Duration(cfg.Duration) * time.Second,
 	}, nil
 }
 
@@ -94,7 +88,7 @@ func (s *Stream) Capture(wr http.ResponseWriter) error {
 		return errors.New("no segments available")
 	}
 
-	writer := NewWriteSeeker(s.size)
+	writer := NewWriteSeeker()
 
 	muxer, err := mp4.CreateMp4Muxer(writer)
 
@@ -165,11 +159,10 @@ func (s *Stream) clean() {
 	var index int
 
 	for i, segment := range s.buffer {
-		if now.Sub(segment.timestamp) <= BufferDuration {
+		if now.Sub(segment.timestamp) <= s.Duration {
 			break
 		}
 
-		s.size -= len(segment.data)
 		index = i
 	}
 
@@ -181,7 +174,7 @@ func (s *Stream) clean() {
 }
 
 func (s *Stream) playlist() (*m3u8.MediaPlaylist, error) {
-	resp, err := s.client.Get(s.UrlString)
+	resp, err := s.client.Get(s.Url.String())
 	if err != nil {
 		return nil, err
 	}
@@ -239,7 +232,6 @@ func (s *Stream) collect() error {
 		}
 
 		s.Lock()
-		s.size += len(data)
 		s.buffer = append(s.buffer, &Segment{
 			data:      data,
 			timestamp: time.Now(),

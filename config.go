@@ -11,7 +11,9 @@ import (
 )
 
 type Config struct {
-	Panel string `json:"panel"`
+	Panel    string `json:"panel"`
+	Interval int    `json:"interval"`
+	Duration int    `json:"duration"`
 }
 
 func LoadConfig() (*Config, error) {
@@ -92,7 +94,7 @@ func FindStreams(cfg *Config) (map[string]*Stream, error) {
 				continue
 			}
 
-			stream, err := NewStream(name, key, fmt.Sprintf(url, key))
+			stream, err := NewStream(cfg, key, fmt.Sprintf(url, key))
 			if err != nil {
 				log.Warningf("Failed to create stream %s for cluster %s: %s\n", key, name, err)
 

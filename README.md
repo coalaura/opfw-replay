@@ -24,15 +24,12 @@ OPFW-Replay is a Go-based service that captures and replays HLS (HTTP Live Strea
 Create a configuration file (`config.json`) in the same directory as the binary:
 ```json
 {
-    "panel": "/path/to/panel"
+    "panel": "/path/to/panel",
+    "duration": 30
 }
 ```
 
-## Technical Details
-
-- Buffer Duration: 20 seconds
-- Collection Interval: 2 seconds
-- HTTP Client Timeout: 5 seconds
-- Supported Formats:
-  - Input: HLS (m3u8)
-  - Output: MP4 (H.264/AAC)
+|Key|Description|Default|
+|---|---|---|
+|`panel`|Path to the panel directory|-|
+|`duration`|Buffer duration (in seconds)|`30`|
