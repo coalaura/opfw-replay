@@ -31,17 +31,14 @@ func LoadConfig() (*Config, error) {
 }
 
 func FindStreams(cfg *Config) (map[string]*Stream, error) {
-	var (
-		streams = make(map[string]*Stream)
-		seen    = make(map[string]struct{})
-	)
-
 	directory := filepath.Join(cfg.Panel, "envs")
 
 	clusters, err := os.ReadDir(directory)
 	if err != nil {
 		return nil, err
 	}
+
+	streams := make(map[string]*Stream)
 
 	for _, cluster := range clusters {
 		if !cluster.IsDir() {
@@ -89,7 +86,7 @@ func FindStreams(cfg *Config) (map[string]*Stream, error) {
 
 			key := parts[1]
 
-			if _, ok := seen[key]; ok {
+			if _, ok := streams[key]; ok {
 				log.Notef("Skipped duplicate stream %s for cluster %s\n", key, name)
 
 				continue
@@ -102,8 +99,7 @@ func FindStreams(cfg *Config) (map[string]*Stream, error) {
 				continue
 			}
 
-			seen[key] = struct{}{}
-			streams[name+":"+key] = stream
+			streams[key] = stream
 
 			log.Notef("Found stream %s for cluster %s\n", key, name)
 		}

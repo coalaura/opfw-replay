@@ -3,7 +3,6 @@ package main
 import (
 	"encoding/json"
 	"net/http"
-	"regexp"
 
 	"github.com/coalaura/logger"
 )
@@ -33,19 +32,8 @@ func main() {
 
 	log.Info("Started replay for all streams")
 
-	http.HandleFunc("/{server}/{key}", func(wr http.ResponseWriter, req *http.Request) {
-		server := req.PathValue("server")
+	http.HandleFunc("/{key}", func(wr http.ResponseWriter, req *http.Request) {
 		key := req.PathValue("key")
-
-		rgx := regexp.MustCompile(`(?m)^(c\d{1,2})s\d{1,2}$`)
-		matches := rgx.FindStringSubmatch(server)
-		if len(matches) < 2 {
-			abort(wr, http.StatusBadRequest, "invalid server")
-
-			return
-		}
-
-		key = matches[1] + ":" + key
 
 		stream, ok := streams[key]
 		if !ok {

@@ -22,7 +22,6 @@ type Stream struct {
 	sequence uint64
 	size     int
 
-	Cluster   string
 	Key       string
 	UrlString string
 	Url       *url.URL
@@ -51,7 +50,6 @@ func NewStream(cluster, key, uri string) (*Stream, error) {
 		},
 		stop: make(chan struct{}),
 
-		Cluster:   cluster,
 		Key:       key,
 		UrlString: uri,
 		Url:       u,
