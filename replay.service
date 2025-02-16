@@ -1,0 +1,18 @@
+[Unit]
+Description=OP-FW Replay
+After=multi-user.target
+StartLimitBurst=10
+StartLimitIntervalSec=60
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=3
+User=root
+WorkingDirectory=/var/replay
+ExecStart=/var/replay/replay
+StandardOutput=append:/var/log/replay.log
+StandardError=append:/var/log/replay.log
+
+[Install]
+WantedBy=multi-user.target
