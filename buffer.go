@@ -8,13 +8,13 @@ import (
 
 type WriterSeeker struct {
 	pos int
-	buf bytes.Buffer
+	buf *bytes.Buffer
 }
 
 func NewWriteSeeker(size int) *WriterSeeker {
 	return &WriterSeeker{
 		pos: 0,
-		buf: *bytes.NewBuffer(make([]byte, 0, size)),
+		buf: bytes.NewBuffer(make([]byte, 0)),
 	}
 }
 
