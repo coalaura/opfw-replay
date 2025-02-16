@@ -7,5 +7,6 @@ if not exist bin (
 echo Building...
 set GOOS=linux
 go build -o bin\replay
+set GOOS=windows
 
 echo Build complete.
