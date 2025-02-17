@@ -68,7 +68,7 @@ func (s *Stream) StartReplay() error {
 
 				err := s.collect()
 				if err != nil {
-					log.Notef("Failed to collect segment for stream %s: %v\n", s.Key, err)
+					log.Warningf("Failed to collect segment for stream %s: %v\n", s.Key, err)
 
 					continue
 				}
