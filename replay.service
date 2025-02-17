@@ -7,7 +7,7 @@ StartLimitIntervalSec=60
 [Service]
 Type=simple
 Restart=always
-RuntimeMaxSec=12h
+RuntimeMaxSec=8h
 RestartSec=3
 User=root
 WorkingDirectory=/var/replay
