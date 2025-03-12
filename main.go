@@ -26,8 +26,11 @@ func main() {
 
 	log.Infof("Found %d streams\n", len(streams))
 
-	for _, stream := range streams {
-		stream.StartReplay()
+	for i, stream := range streams {
+		log.Debugf("Starting stream %s...\n", i)
+
+		err = stream.StartReplay()
+		log.MustPanic(err)
 	}
 
 	log.Info("Started replay for all streams")
