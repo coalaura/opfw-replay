@@ -33,3 +33,7 @@ Create a configuration file (`config.json`) in the same directory as the binary:
 |---|---|---|
 |`panel`|Path to the panel directory|-|
 |`duration`|Buffer duration (in seconds)|`30`|
+
+## Optional health-check
+
+You can optionally set up a cronjob to run [`health.sh`](health.sh) every couple minutes to ensure the service is started back up automatically after long stream-downtime periods.
